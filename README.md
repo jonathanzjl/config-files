@@ -15,6 +15,7 @@
   * `elpy`
   * `helm-projectile`
   * `helm`
+  * `lice`
   * `projectile`
   * `move-text`
   * `multiple-cursors`

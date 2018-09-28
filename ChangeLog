@@ -1,4 +1,6 @@
 2018-09-28  Zhijin Li  <jonathan.zj.lee@gmail.com>
 
+	* README.md: Refine doc.
+
 	* .emacs (+1): Fix projectile keymap.
 	Fix issue with lice & header insert.
