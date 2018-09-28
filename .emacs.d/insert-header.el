@@ -33,7 +33,7 @@
 ;; E-mail:   <jonathan.zj.lee@gmail.com>
 ;;
 ;; Started on  Sun Sep  9 21:05:27 2018 Zhijin Li
-;; Last update Sun Sep  9 21:06:08 2018 Zhijin Li
+;; Last update Fri Sep 28 23:11:41 2018 Zhijin Li
 ;; ---------------------------------------------------------------------------
 
 
@@ -45,6 +45,7 @@
       header-login-mid	"@"
       header-login-end	">"
       header-started	"Started on  "
+      header-last	"Last update "
       header-for	" for "
       header-in		" in "
       header-by		" by "

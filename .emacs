@@ -33,7 +33,7 @@
 ;; E-mail:   <jonathan.zj.lee@gmail.com>
 ;;
 ;; Started on  Sun Sep  9 21:13:06 2018 Zhijin Li
-;; Last update Sun Sep  9 21:51:24 2018 Zhijin Li
+;; Last update Fri Sep 28 23:13:29 2018 Zhijin Li
 ;; ---------------------------------------------------------------------------
 
 
@@ -41,15 +41,15 @@
 (setq user-mail-address "jonathan.zj.lee@gmail.com")
 (setq default-directory "~/")
 
-(load "~/.emacs.d/insert-header.el")
-(load "~/.emacs.d/zj-theme.el")
-(load "~/.emacs.d/highlight-curr-linum.el")
-
 ;; Manage packages thru MELPA.
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
+
+(load "~/.emacs.d/insert-header.el")
+(load "~/.emacs.d/zj-theme.el")
+(load "~/.emacs.d/highlight-curr-linum.el")
 
 ;; Hilight line and white cursor.
 (setq global-hl-line-mode 1)
@@ -116,7 +116,7 @@
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
    (quote
-    (lice modern-cpp-font-lock markdown-mode transpose-mark pdf-tools auto-complete smart-mode-line-powerline-theme auctex helm-projectile helm projectile move-text multiple-cursors)))
+    (modern-cpp-font-lock markdown-mode transpose-mark pdf-tools auto-complete smart-mode-line-powerline-theme auctex helm-projectile helm projectile move-text multiple-cursors)))
  '(preview-TeX-style-dir "/home/de329445/.emacs.d/elpa/auctex-11.90.0/latex" t)
  '(reftex-toc-keep-other-windows t)
  '(reftex-toc-split-windows-fraction 0.5)
@@ -381,7 +381,9 @@
 (setq helm-ff-file-name-history-use-recentf t)
 
 ;; Projectile
-(projectile-global-mode)
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
 (setq projectile-completion-system 'helm)
 (setq projectile-switch-project-action 'helm-projectile)
 (helm-projectile-on)
