@@ -1,3 +1,14 @@
+2018-11-11  Zhijin Li  <jonathan.zj.lee@gmail.com>
+
+	* README.md: Refine doc.
+
+2018-11-10  Zhijin Li  <jonathan.zj.lee@gmail.com>
+
+	* .emacs.d/insert-header.el (tex-mode-hook): Fix insert-header
+	error message.
+
+	* .emacs: Add indent-guide, webmode.
+
 2018-09-28  Zhijin Li  <jonathan.zj.lee@gmail.com>
 
 	* README.md: Refine doc.

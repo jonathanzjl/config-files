@@ -33,7 +33,7 @@
 ;; E-mail:   <jonathan.zj.lee@gmail.com>
 ;;
 ;; Started on  Sun Sep  9 21:05:27 2018 Zhijin Li
-;; Last update Fri Sep 28 23:11:41 2018 Zhijin Li
+;; Last update Sat Nov 10 23:51:52 2018 Zhijin Li
 ;; ---------------------------------------------------------------------------
 
 
@@ -49,15 +49,7 @@
       header-for	" for "
       header-in		" in "
       header-by		" by "
-      header-line	" ---------------------------------------------------------------------------"
-      domaine-name	"ge.com")
-
-(defun year-string (year &optional (mode 'long))
-  "Formats a year number in various ways."
-  (when year
-    (case mode
-      (short (format nil "~A" (mod year 100)))
-      (long (format nil "~A" year)))))
+      header-line	" ---------------------------------------------------------------------------")
 
 
 (if (setq user-nickname (getenv "USER_NICKNAME"))
@@ -87,9 +79,11 @@
       std-cperl-alist           '( (cs . "#!/usr/bin/perl -w")  (cc . "##")(ce . "##") ))
 
 (setq std-modes-alist '(("Autoconf"             . std-autoconf-alist)
+			("C/*l"                	. std-c-alist)
 			("C/l"                	. std-c-alist)
 			("CSS"                	. std-c-alist)
 			("PoV"                	. std-pov-alist)
+                        ("C++//l"              	. std-cpp-alist)
                         ("C++/l"              	. std-cpp-alist)
                         ("Lisp"             	. std-lisp-alist)
                         ("Lisp Interaction" 	. std-lisp-alist)
@@ -127,12 +121,12 @@
 		(delete-region
 		 (progn (beginning-of-line) (point))
 		 (progn (end-of-line) (point)))
-		(insert-string (concat (std-get 'cc)
-                                       " "
-				       header-last
-				       (current-time-string)
-				       " "
-				       user-nickname))
+		(insert (concat (std-get 'cc)
+                                " "
+				header-last
+				(current-time-string)
+				" "
+				user-nickname))
 		(message "Last modification header field updated.")))
           )))
   nil)
@@ -142,68 +136,66 @@
   "Puts a standard header at the beginning of the file.\n(According to mode)"
   (interactive)
   (goto-char (point-min))
-  (let ((projname "toto")(location "titi"))
+  (let ((projname "foo"))
     (setq projname (read-from-minibuffer
 		    (format "Type project name (RETURN to quit) : ")))
-    (setq location (getenv "PWD"))
 
 
     (if (equal (std-get 'cs) (std-get 'cc))
         ()
       (progn
-        (insert-string (std-get 'cs))
+        (insert (std-get 'cs))
         (newline))
       )
 
     (call-interactively #'lice)
     (newline)
 
-    (insert-string (concat (std-get 'cc)
-        		   header-line))
+    (insert (concat (std-get 'cc) header-line))
     (newline)
-    (insert-string (std-get 'cc))
+    (insert (std-get 'cc))
     (newline)
-    (insert-string (concat (std-get 'cc)
-                           " File: "
-			   (buffer-name)
-			   header-for
-			   projname))
+    (insert (concat (std-get 'cc)
+                    " File: "
+		    (buffer-name)
+		    header-for
+		    projname))
     (newline)
-    (insert-string (std-get 'cc))
+    (insert (std-get 'cc))
     (newline)
-    (insert-string (concat (std-get 'cc) " " header-created-by user-full-name))
+    (insert (concat (std-get 'cc) " " header-created-by user-full-name))
     (newline)
-    (insert-string (concat (std-get 'cc)
-                           " "
-			   header-login
-			   header-login-beg
-			   user-mail-address
-			   header-login-end))
+    (insert (concat (std-get 'cc)
+                    " "
+		    header-login
+		    header-login-beg
+		    user-mail-address
+		    header-login-end))
     (newline)
-    (insert-string (std-get 'cc))
+    (insert (std-get 'cc))
     (newline)
-    (insert-string (concat (std-get 'cc)
-                           " "
-			   header-started
-			   (current-time-string)
-			   " "
-			   user-nickname))
+    (insert (concat (std-get 'cc)
+                    " "
+		    header-started
+		    (current-time-string)
+		    " "
+		    user-nickname))
     (newline)
-    (insert-string (concat (std-get 'cc)
-                           " "
-			   header-last
-			   (current-time-string)
-			   " "
-			   user-nickname))
+    (insert (concat (std-get 'cc)
+                    " "
+		    header-last
+		    (current-time-string)
+		    " "
+		    user-nickname))
     (newline)
 
-    (insert-string (concat (std-get 'cc)
-                           header-line))
+    (insert (concat (std-get 'cc)
+                    header-line))
     (newline)
 
     (if (equal (std-get 'cc) (std-get 'ce))
-        (nil)
-      (insert-string (std-get 'ce)))
+        ()
+      (insert (std-get 'ce)))
 
     (newline)
     ))
@@ -212,7 +204,7 @@
   "Inserts vertical comments (according to mode)."
   (interactive)
   (beginning-of-line)
-  (insert-string (std-get 'cs))
+  (insert (std-get 'cs))
   (newline)
   (let ((ok t)(comment ""))
     (while ok
@@ -221,9 +213,9 @@
       (if (= 0 (length comment))
 	  (setq ok nil)
 	(progn
-	  (insert-string (concat (std-get 'cc) comment))
+	  (insert (concat (std-get 'cc) comment))
 	  (newline)))))
-  (insert-string (std-get 'ce))
+  (insert (std-get 'ce))
   (newline))
 
 (defun std-toggle-comment ()
@@ -247,23 +239,20 @@
 		    (replace-string (std-get 'ce) ""))
 		(progn
 		  (beginning-of-line)
-		  (insert-string (std-get 'cs))
+		  (insert (std-get 'cs))
 		  (end-of-line)
-		  (insert-string (std-get 'ce)))))))))
+		  (insert (std-get 'ce)))))))))
   (indent-for-tab-command)
   (next-line 1))
 
-;;; Added by Eole Wednesday May 29 2002,  1:33:55
-;;; Extended bindings for this package and for commenting code
-
+;;; Global key-bindings
 (global-set-key "h" 'update-std-header)
 (global-set-key "" 'std-file-header)
 
-;;;; Generating local keymaps for exotics modes.
+;;;; Generating local keymaps for special modes.
 
 ;;; In CPerl mode, C-c C-h is used to do some help.
 ;;; so it is C-c C-h h
-;;; For working, it requires info pages about perl
 (add-hook 'cperl-mode-hook
 	  '(lambda ()
 	     (define-key cperl-mode-map ""
@@ -277,14 +266,14 @@
 	     (define-key perl-mode-map ""
 	       'comment-region)))
 
-;; for all kind of lisp code
+;; for all lisp codes
 (add-hook 'lisp-interaction-mode-hook
  	  '(lambda ()
  	     (local-set-key  ""
                              'comment-region)))
 
 
-;; for La(TeX)-mode
+;; for LaTeX-mode
 (add-hook 'tex-mode-hook
 	  '(lambda ()
 	     (define-key tex-mode-map ""

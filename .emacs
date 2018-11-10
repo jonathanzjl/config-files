@@ -33,13 +33,22 @@
 ;; E-mail:   <jonathan.zj.lee@gmail.com>
 ;;
 ;; Started on  Sun Sep  9 21:13:06 2018 Zhijin Li
-;; Last update Fri Sep 28 23:13:29 2018 Zhijin Li
+
 ;; ---------------------------------------------------------------------------
 
+                                        ;(unless window-system
+                                        ;  (require 'mouse)
+                                        ;  (xterm-mouse-mode t)
+                                        ;  (defun track-mouse (e))
+                                        ;  (setq mouse-sel-mode t)
+                                        ;  )
 
 (setq user-full-name "Zhijin Li")
 (setq user-mail-address "jonathan.zj.lee@gmail.com")
 (setq default-directory "~/")
+
+(set-frame-parameter (selected-frame) 'alpha '(97 . 90))
+(add-to-list 'default-frame-alist '(alpha . (97 . 90)))
 
 ;; Manage packages thru MELPA.
 (require 'package)
@@ -113,10 +122,12 @@
  '(helm-mode t)
  '(helm-move-to-line-cycle-in-source t)
  '(helm-split-window-inside-p t)
+ '(indent-guide-global-mode t)
  '(initial-frame-alist (quote ((fullscreen . maximized))))
+ '(markdown-command "pandoc")
  '(package-selected-packages
    (quote
-    (modern-cpp-font-lock markdown-mode transpose-mark pdf-tools auto-complete smart-mode-line-powerline-theme auctex helm-projectile helm projectile move-text multiple-cursors)))
+    (web-mode indent-guide yasnippet modern-cpp-font-lock markdown-mode transpose-mark pdf-tools auto-complete smart-mode-line-powerline-theme auctex helm-projectile helm projectile move-text multiple-cursors)))
  '(preview-TeX-style-dir "/home/de329445/.emacs.d/elpa/auctex-11.90.0/latex" t)
  '(reftex-toc-keep-other-windows t)
  '(reftex-toc-split-windows-fraction 0.5)
@@ -129,7 +140,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Noto Sans Mono" :slant normal :weight normal :height 60 :width normal))))
+ '(default ((t (:family "monaco" :slant normal :weight normal :height 130 :width normal))))
  '(ediff-current-diff-B ((t (:background "sienna"))))
  '(ediff-even-diff-A ((t (:background "dark gray" :foreground "black"))))
  '(ediff-even-diff-Ancestor ((t (:background "Grey" :foreground "Black"))))
@@ -139,6 +150,7 @@
  '(ediff-odd-diff-C ((t (:background "Grey" :foreground "Black"))))
  '(helm-selection ((t (:background "purple" :foreground "white" :weight bold))))
  '(helm-source-header ((t (:background "steel blue" :foreground "white" :weight normal :height 1.0 :width normal :family "Courier New"))))
+ '(indent-guide-face ((t (:foreground "LightGreen" :slant normal))))
  '(linum ((t (:background "gray25" :foreground "white smoke" :width extra-expanded))))
  '(linum-current-line ((t (:inherit linum :background "black" :foreground "lawn green" :underline nil :weight extra-bold))))
  '(sml/col-number ((t (:inherit sml/global :background "black"))))
@@ -153,7 +165,7 @@
  '(sml/vc-edited ((t (:inherit sml/prefix :background "grey40" :foreground "tomato" :slant italic :weight normal)))))
 
 
-;; Disable menu bar, tool bar
+;; Disable menu bar & tool bar
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 
@@ -161,6 +173,9 @@
 ;; (require 'auto-complete)
 ;; (global-auto-complete-mode t)
 ;; (ac-config-default)
+
+;; Use pandoc for markdown mode preview
+(setq markdown-command "pandoc")
 
 ;; Use smart-mode-line.
 (setq powerline-arrow-shape 'curve)
@@ -220,6 +235,9 @@
 (add-hook 'python-mode-hook
           (lambda () (setq python-indent 2)))
 
+;; Python indent highlight
+(require 'indent-guide)
+
 ;; Elpy mode
 (elpy-enable)
 
@@ -252,7 +270,9 @@
 
 ;; Correct some C++ for/if intro indentation.
 (defun zhijin/cc-correct-indent ()
-  (c-set-offset 'substatement-open 0))
+  (c-set-offset 'substatement-open 0)
+  (c-set-offset 'brace-list-open 0)
+  (c-set-offset 'brace-list-intro 2))
 (add-hook 'c-mode-hook 'zhijin/cc-correct-indent)
 (add-hook 'c++-mode-hook 'zhijin/cc-correct-indent)
 
@@ -296,7 +316,7 @@
 
 ;; Multiple cursors.
 (require 'multiple-cursors)
-(global-unset-key (kbd "C-x C-a"))
+;; (global-unset-key (kbd "C-x C-a"))
 (global-set-key (kbd "C-f") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-b") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-x C-a") 'mc/mark-all-like-this)
@@ -312,7 +332,7 @@
 (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
 ;; Setup LOCAL_DIR.
-(setenv "LOCAL_DIR" "~/local")
+(setenv "LOCAL_DIR" "/Users/jonathanlee/local")
 
 ;; Join lines from the top.
 (defun top-join-line ()
@@ -336,7 +356,7 @@
 
 ;; Show parentheses matching in buffer echo area when out of screen.
 (defadvice show-paren-function
-  (after show-matching-paren-offscreen activate)
+    (after show-matching-paren-offscreen activate)
   "If the matching paren is offscreen, show the matching line in the
         echo area. Has no effect if the character before point is not of
         the syntax class ')'."
@@ -383,15 +403,16 @@
 ;; Projectile
 (projectile-mode +1)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p r") 'projectile-replace-regexp)
 
 (setq projectile-completion-system 'helm)
 (setq projectile-switch-project-action 'helm-projectile)
 (helm-projectile-on)
 
-(setq projectile-globally-ignored-files '( "*.hh~"
-                                           "*.hxx~"
-                                           "*.cc~"
-                                           "Makefile~"))
+;; (setq projectile-globally-ignored-files '( "*.hh~"
+;;                                            "*.hxx~"
+;;                                            "*.cc~"
+;;                                            "Makefile~"))
 
 (add-to-list 'projectile-other-file-alist '("hh" "hxx")) ;; switch from hh -> hxx
 (add-to-list 'projectile-other-file-alist '("hxx" "hh")) ;; switch from hxx -> hh
@@ -471,11 +492,11 @@
 (global-set-key (kbd "C-x g") 'magit-status)
 
 ;; YASnippet
-(require 'yasnippet)
-(yas-global-mode 1)
+;; (require 'yasnippet)
+;; (yas-global-mode 1)
 
-(setq yas/root-directory "~/.emacs.d/snippets")
-(yas/load-directory yas/root-directory)
+;; (setq yas/root-directory "~/.emacs.d/snippets")
+;; (yas/load-directory yas/root-directory)
 
 (define-key yas-minor-mode-map [(control return)] 'yas-expand)
 (define-key yas-minor-mode-map [(tab)]            nil)
@@ -518,3 +539,15 @@
 
 (global-set-key [\M-down] 'move-text-down)
 (global-set-key [\M-up] 'move-text-up)
+
+;; Using web-mode.
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))

@@ -19,6 +19,8 @@
   * `projectile`
   * `move-text`
   * `multiple-cursors`
+  * `indent-guide`
+  * `web-mode`
 
 - Additional elisp scripts under `.emacs.d` folder:
   * `highlight-curr-linum.el`: highlight current line number
