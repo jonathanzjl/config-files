@@ -1,3 +1,7 @@
+2018-12-23  Zhijin Li  <jonathan.zj.lee@gmail.com>
+
+	* .emacs.d/insert-header.el: Fix c-mode file header.
+
 2018-11-11  Zhijin Li  <jonathan.zj.lee@gmail.com>
 
 	* README.md: Refine doc.

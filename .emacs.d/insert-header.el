@@ -33,8 +33,9 @@
 ;; E-mail:   <jonathan.zj.lee@gmail.com>
 ;;
 ;; Started on  Sun Sep  9 21:05:27 2018 Zhijin Li
-;; Last update Sat Nov 10 23:51:52 2018 Zhijin Li
+;; Last update Sun Dec 23 23:08:38 2018 Zhijin Li
 ;; ---------------------------------------------------------------------------
+
 
 
 (require 'lice)
@@ -140,8 +141,7 @@
     (setq projname (read-from-minibuffer
 		    (format "Type project name (RETURN to quit) : ")))
 
-
-    (if (equal (std-get 'cs) (std-get 'cc))
+    (if (or (eq major-mode 'c-mode) (equal (std-get 'cs) (std-get 'cc)))
         ()
       (progn
         (insert (std-get 'cs))
@@ -150,6 +150,12 @@
 
     (call-interactively #'lice)
     (newline)
+
+    (if (eq major-mode 'c-mode)
+      (progn
+        (insert (std-get 'cs))
+        (newline))
+      )
 
     (insert (concat (std-get 'cc) header-line))
     (newline)
