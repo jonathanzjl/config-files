@@ -2,6 +2,7 @@
 
 	* .emacs.d/insert-header.el: Modify comment alist to rely on
 	major-mode.
+	Fix header for html.
 
 2018-12-23  Zhijin Li  <jonathan.zj.lee@gmail.com>
 
