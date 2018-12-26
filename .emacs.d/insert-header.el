@@ -33,9 +33,8 @@
 ;; E-mail:   <jonathan.zj.lee@gmail.com>
 ;;
 ;; Started on  Sun Sep  9 21:05:27 2018 Zhijin Li
-;; Last update Sun Dec 23 23:08:38 2018 Zhijin Li
+;; Last update Wed Dec 26 13:57:47 2018 Zhijin Li
 ;; ---------------------------------------------------------------------------
-
 
 
 (require 'lice)
@@ -59,56 +58,45 @@
 
 (setq write-file-hooks (cons 'update-std-header write-file-hooks))
 
-(setq std-c-alist               '( (cs . "/*") (cc . "**") (ce . "*/") )
-      std-autoconf-alist        '( (cs . "##") (cc . "##") (ce . "##") )
-      std-css-alist             '( (cs . "/*") (cc . "**") (ce . "*/") )
-      std-cpp-alist             '( (cs . "//") (cc . "//") (ce . "//") )
-      std-pov-alist             '( (cs . "//") (cc . "//") (ce . "//") )
-      std-java-alist            '( (cs . "//") (cc . "//") (ce . "//") )
-      std-latex-alist		'( (cs . "%%") (cc . "%%") (ce . "%%") )
-      std-lisp-alist            '( (cs . ";;") (cc . ";;") (ce . ";;") )
-      std-xdefault-alist	'( (cs . "!!") (cc . "!!") (ce . "!!") )
-      std-pascal-alist		'( (cs . "{ ") (cc . "  ") (ce . "}" ) )
-      std-makefile-alist        '( (cs . "##") (cc . "##") (ce . "##") )
-      std-text-alist		'( (cs . "##") (cc . "##") (ce . "##") )
-      std-fundamental-alist     '( (cs . "##") (cc . "##") (ce . "##") )
-      std-html-alist		'( (cs . "<!--") (cc . "  --") (ce . "-->"))
-      std-nroff-alist		'( (cs . "\\\"") (cc . "\\\" ") (ce . "\\\""))
-      std-sscript-alist         '( (cs . "#!/bin/bash")  (cc . "##") (ce . "##") )
-      std-perl-alist            '( (cs . "#!/usr/bin/perl -w")  (cc . "##")(ce . "##") )
-      std-python-alist          '( (cs . "#! /usr/bin/env python3")  (cc . "##")(ce . "##") )
-      std-cperl-alist           '( (cs . "#!/usr/bin/perl -w")  (cc . "##")(ce . "##") ))
+(setq
+ c-cmnt-alist    '( (cs . "/*") (cc . " *") (ce . "*/") )
+ c++-cmnt-alist  '( (cs . "//") (cc . "//") (ce . "//") )
+ java-cmnt-alist '( (cs . "//") (cc . "//") (ce . "//") )
+ py-cmnt-alist   '( (cs . "#! /usr/bin/env python3")  (cc . "##")(ce . "##") )
+ sh-cmnt-alist   '( (cs . "#! /bin/bash")  (cc . "##") (ce . "##") )
+ mk-cmnt-alist   '( (cs . "##") (cc . "##") (ce . "##") )
+ tex-cmnt-alist  '( (cs . "%%") (cc . "%%") (ce . "%%") )
+ js-cmnt-alist   '( (cs . "//") (cc . "//") (ce . "//") )
+ html-cmnt-alist '( (cs . "<!--") (cc . "  --") (ce . "-->"))
+ css-cmnt-alist  '( (cs . "/*") (cc . " *") (ce . "*/") )
+ lisp-cmnt-alist '( (cs . ";;") (cc . ";;") (ce . ";;") )
+ fund-cmnt-alist '( (cs . "##") (cc . "##") (ce . "##") )
+ )
 
-(setq std-modes-alist '(("Autoconf"             . std-autoconf-alist)
-			("C/*l"                	. std-c-alist)
-			("C/l"                	. std-c-alist)
-			("CSS"                	. std-c-alist)
-			("PoV"                	. std-pov-alist)
-                        ("C++//l"              	. std-cpp-alist)
-                        ("C++/l"              	. std-cpp-alist)
-                        ("Lisp"             	. std-lisp-alist)
-                        ("Lisp Interaction" 	. std-lisp-alist)
-                        ("Emacs-Lisp"       	. std-lisp-alist)
-                        ("Fundamental"      	. std-fundamental-alist)
-                        ("Shell-script"     	. std-sscript-alist)
-                        ("Python"     	        . std-python-alist)
-                        ("GNUmakefile"         	. std-makefile-alist)
-                        ("Makefile.am"         	. std-makefile-alist)
-			("Perl"            	. std-cperl-alist)
-			("CPerl"            	. std-cperl-alist)
-			("xdefault"         	. std-xdefault-alist)
-			("java"             	. std-java-alist)
-			("latex"	    	. std-latex-alist)
-			("Pascal"	    	. stdp-ascal-alist)
-			("Text"	            	. std-text-alist)
-			("HTML"	            	. std-html-alist)
-			("Nroff"	    	. std-nroff-alist)
-			("TeX"			. std-latex-alist)
-			("LaTeX"		. std-latex-alist)))
+(setq major-mode-alist
+      '(
+	(c-mode                    . c-cmnt-alist)
+        (c++-mode                  . c++-cmnt-alist)
+	(java-mode             	   . java-cmnt-alist)
+        (python-mode               . py-cmnt-alist)
+        (sh-mode                   . sh-cmnt-alist)
+        (makefile-bsdmakefile-mode . mk-cmnt-alist)
+        (makefile-automake-mode    . mk-cmnt-alist)
+	(latex-mode                . tex-cmnt-alist)
+        (js-mode                   . js-cmnt-alist)
+	(mhtml-mode                . html-cmnt-alist)
+	(css-mode                  . css-cmnt-alist)
+        (lisp-mode                 . lisp-cmnt-alist)
+        (emacs-lisp-mode           . lisp-cmnt-alist)
+        (lisp-interaction-mode     . lisp-cmnt-alist)
+        (fundamental-mode          . fund-cmnt-alist)
+        ))
+
 
 (defun std-get (a)
   (interactive)
-  (cdr (assoc a (eval (cdr (assoc mode-name std-modes-alist))))))
+  (cdr (assoc a (eval (cdr (assoc major-mode major-mode-alist))))))
+
 
 (defun update-std-header ()
   "Updates std header with last modification time & owner.\n(According to mode)"
@@ -141,7 +129,9 @@
     (setq projname (read-from-minibuffer
 		    (format "Type project name (RETURN to quit) : ")))
 
-    (if (or (eq major-mode 'c-mode) (equal (std-get 'cs) (std-get 'cc)))
+    (if (or (eq major-mode 'c-mode)
+            (eq major-mode 'css-mode)
+            (equal (std-get 'cs) (std-get 'cc)))
         ()
       (progn
         (insert (std-get 'cs))
@@ -151,10 +141,11 @@
     (call-interactively #'lice)
     (newline)
 
-    (if (eq major-mode 'c-mode)
-      (progn
-        (insert (std-get 'cs))
-        (newline))
+    (if (or (eq major-mode 'c-mode)
+            (eq major-mode 'css-mode))
+        (progn
+          (insert (std-get 'cs))
+          (newline))
       )
 
     (insert (concat (std-get 'cc) header-line))
@@ -206,6 +197,7 @@
     (newline)
     ))
 
+
 (defun insert-std-vertical-comments ()
   "Inserts vertical comments (according to mode)."
   (interactive)
@@ -223,6 +215,7 @@
 	  (newline)))))
   (insert (std-get 'ce))
   (newline))
+
 
 (defun std-toggle-comment ()
   "Toggles line comment on or off (according to mode)."
@@ -250,6 +243,7 @@
 		  (insert (std-get 'ce)))))))))
   (indent-for-tab-command)
   (next-line 1))
+
 
 ;;; Global key-bindings
 (global-set-key "h" 'update-std-header)
