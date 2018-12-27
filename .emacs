@@ -33,15 +33,18 @@
 ;; E-mail:   <jonathan.zj.lee@gmail.com>
 ;;
 ;; Started on  Sun Sep  9 21:13:06 2018 Zhijin Li
-
+;; Last update Thu Dec 27 23:51:58 2018 Zhijin Li
 ;; ---------------------------------------------------------------------------
 
-                                        ;(unless window-system
-                                        ;  (require 'mouse)
-                                        ;  (xterm-mouse-mode t)
-                                        ;  (defun track-mouse (e))
-                                        ;  (setq mouse-sel-mode t)
-                                        ;  )
+;;(unless window-system
+;;  (require 'mouse)
+;;  (xterm-mouse-mode t)
+;;  (defun track-mouse (e))
+;;  (setq mouse-sel-mode t)
+;;  )
+
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 (setq user-full-name "Zhijin Li")
 (setq user-mail-address "jonathan.zj.lee@gmail.com")
@@ -82,6 +85,9 @@
 
 (global-unset-key (kbd "<prior>"))
 (global-unset-key (kbd "<next>"))
+
+(global-set-key (kbd "C-x C-v") 'revert-buffer)
+
 (global-set-key (kbd "<prior>") 'scroll-half-page-down)
 (global-set-key (kbd "<next>") 'scroll-half-page-up)
 
@@ -95,27 +101,13 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(TeX-error-overview-open-after-TeX-run t t)
- '(TeX-view-program-list
-   (quote
-    (("Okular"
-      ("okular --unique %o#src:%n%b")
-      "/usr/bin/okular"))))
- '(TeX-view-program-selection
-   (quote
-    ((output-pdf "Okular")
-     ((output-dvi has-no-display-manager)
-      "dvi2tty")
-     ((output-dvi style-pstricks)
-      "dvips and gv")
-     (output-dvi "xdvi")
-     (output-pdf "Evince")
-     (output-html "xdg-open"))))
  '(column-number-mode t)
  '(custom-safe-themes
    (quote
     ("84d2f9eeb3f82d619ca4bfffe5f157282f4779732f48a5ac1484d94d5ff5b279" default)))
  '(ediff-split-window-function (quote split-window-horizontally))
  '(ediff-window-setup-function (quote ediff-setup-windows-plain-compare))
+ '(elpy-eldoc-show-current-function nil)
  '(helm-display-header-line nil)
  '(helm-display-source-at-screen-top t)
  '(helm-ff-file-name-history-use-recentf t)
@@ -124,10 +116,11 @@
  '(helm-split-window-inside-p t)
  '(indent-guide-global-mode t)
  '(initial-frame-alist (quote ((fullscreen . maximized))))
- '(markdown-command "pandoc")
+ '(js2-highlight-level 3)
+ '(markdown-command "pandoc" t)
  '(package-selected-packages
    (quote
-    (web-mode indent-guide yasnippet modern-cpp-font-lock markdown-mode transpose-mark pdf-tools auto-complete smart-mode-line-powerline-theme auctex helm-projectile helm projectile move-text multiple-cursors)))
+    (js2-mode indent-guide yasnippet modern-cpp-font-lock markdown-mode transpose-mark pdf-tools auto-complete smart-mode-line-powerline-theme auctex helm-projectile helm projectile move-text multiple-cursors)))
  '(preview-TeX-style-dir "/home/de329445/.emacs.d/elpa/auctex-11.90.0/latex" t)
  '(reftex-toc-keep-other-windows t)
  '(reftex-toc-split-windows-fraction 0.5)
@@ -148,9 +141,18 @@
  '(ediff-fine-diff-B ((t (:background "dark green"))))
  '(ediff-odd-diff-A ((t (:background "Grey" :foreground "Black"))))
  '(ediff-odd-diff-C ((t (:background "Grey" :foreground "Black"))))
+ '(font-lock-constant-face ((t (:foreground "yellow1"))))
+ '(font-lock-function-name-face ((t (:foreground "green yellow"))))
+ '(font-lock-keyword-face ((t (:foreground "DeepSkyBlue1"))))
+ '(font-lock-variable-name-face ((t (:foreground "plum"))))
  '(helm-selection ((t (:background "purple" :foreground "white" :weight bold))))
  '(helm-source-header ((t (:background "steel blue" :foreground "white" :weight normal :height 1.0 :width normal :family "Courier New"))))
  '(indent-guide-face ((t (:foreground "LightGreen" :slant normal))))
+ '(js2-error ((t (:foreground "salmon"))))
+ '(js2-external-variable ((t (:foreground "DarkSlateGray3"))))
+ '(js2-function-call ((t (:inherit default :foreground "cornflower blue"))))
+ '(js2-object-property ((t (:inherit default :foreground "steel blue"))))
+ '(js2-object-property-access ((t (:inherit js2-object-property :foreground "LightGoldenrod2"))))
  '(linum ((t (:background "gray25" :foreground "white smoke" :width extra-expanded))))
  '(linum-current-line ((t (:inherit linum :background "black" :foreground "lawn green" :underline nil :weight extra-bold))))
  '(sml/col-number ((t (:inherit sml/global :background "black"))))
@@ -162,7 +164,15 @@
  '(sml/position-percentage ((t (:inherit sml/prefix :background "grey40" :foreground "lawn green" :underline t :weight normal))))
  '(sml/read-only ((t (:inherit sml/not-modified :foreground "deep sky blue"))))
  '(sml/vc ((t (:inherit sml/git :background "grey40" :foreground "yellow" :underline nil :weight normal))))
- '(sml/vc-edited ((t (:inherit sml/prefix :background "grey40" :foreground "tomato" :slant italic :weight normal)))))
+ '(sml/vc-edited ((t (:inherit sml/prefix :background "grey40" :foreground "tomato" :slant italic :weight normal))))
+ '(term-color-blue ((t (:background "blue2" :foreground "DodgerBlue1"))))
+ '(term-color-green ((t (:background "green3" :foreground "PaleGreen"))))
+ '(term-color-magenta ((t (:background "magenta3" :foreground "violet"))))
+ '(term-color-red ((t (:background "red3" :foreground "LightCoral"))))
+ '(term-color-yellow ((t (:background "yellow3" :foreground "khaki"))))
+ '(web-mode-html-attr-name-face ((t (:foreground "plum"))))
+ '(web-mode-html-tag-face ((t (:foreground "steel blue"))))
+ '(web-mode-type-face ((t (:foreground "yellow")))))
 
 
 ;; Disable menu bar & tool bar
@@ -208,6 +218,32 @@
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+;; JS2-mode
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
+(add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+(add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode))
+
+;; Using web-mode for HTML & templating engines.
+(require 'web-mode)
+;; (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+(defun web-mode-indent-hook ()
+  "Change web-mode indent to 2."
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2))
+
+(add-hook 'web-mode-hook  'web-mode-indent-hook)
+
+
 ;; Autofill in log-file modes.
 (add-hook 'change-log-mode-hook 'turn-on-auto-fill)
 (add-hook 'markdown-mode-hook 'turn-on-auto-fill)
@@ -237,6 +273,9 @@
 
 ;; Python indent highlight
 (require 'indent-guide)
+
+;; Set javascript indent level to 2.
+(setq js-indent-level 2)
 
 ;; Elpy mode
 (elpy-enable)
@@ -409,11 +448,6 @@
 (setq projectile-switch-project-action 'helm-projectile)
 (helm-projectile-on)
 
-;; (setq projectile-globally-ignored-files '( "*.hh~"
-;;                                            "*.hxx~"
-;;                                            "*.cc~"
-;;                                            "Makefile~"))
-
 (add-to-list 'projectile-other-file-alist '("hh" "hxx")) ;; switch from hh -> hxx
 (add-to-list 'projectile-other-file-alist '("hxx" "hh")) ;; switch from hxx -> hh
 (add-to-list 'projectile-other-file-alist '("hpp" "cpp")) ;; switch from hpp -> cpp
@@ -445,6 +479,24 @@
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
+
+;; Use Skim as viewer, enable source <-> PDF sync
+;; make latexmk available via C-c C-c
+;; Note: SyncTeX is setup via ~/.latexmkrc (see below)
+(add-hook 'LaTeX-mode-hook (lambda ()
+                             (push
+                              '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+                                :help "Run latexmk on file")
+                              TeX-command-list)))
+(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+
+;; use Skim as default pdf viewer
+;; Skim's displayline is used for forward search (from .tex to .pdf)
+;; option -b highlights the current line; option -g opens Skim in the background
+(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+(setq TeX-view-program-list
+      '(("PDF Viewer"
+         "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
 
 (add-hook 'LaTeX-mode-hook 'visual-line-mode)
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
@@ -539,15 +591,3 @@
 
 (global-set-key [\M-down] 'move-text-down)
 (global-set-key [\M-up] 'move-text-up)
-
-;; Using web-mode.
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))

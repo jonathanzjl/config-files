@@ -20,6 +20,7 @@
   * `move-text`
   * `multiple-cursors`
   * `indent-guide`
+  * `js2-mode`
   * `web-mode`
 
 - Additional elisp scripts under `.emacs.d` folder:

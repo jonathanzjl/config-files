@@ -33,7 +33,7 @@
 ;; E-mail:   <jonathan.zj.lee@gmail.com>
 ;;
 ;; Started on  Sun Sep  9 21:05:27 2018 Zhijin Li
-;; Last update Wed Dec 26 14:15:31 2018 Zhijin Li
+;; Last update Thu Dec 27 23:52:39 2018 Zhijin Li
 ;; ---------------------------------------------------------------------------
 
 
@@ -67,7 +67,7 @@
  mk-cmnt-alist   '( (cs . "##") (cc . "##") (ce . "##") )
  tex-cmnt-alist  '( (cs . "%%") (cc . "%%") (ce . "%%") )
  js-cmnt-alist   '( (cs . "//") (cc . "//") (ce . "//") )
- html-cmnt-alist '( (banner . "<!DOCTYPE html>") (cs . "<!--") (cc . "  --") (ce . "-->"))
+ html-cmnt-alist '( (banner . "<!DOCTYPE html>") (cs . "<!--") (cc . "   --") (ce . "-->"))
  css-cmnt-alist  '( (cs . "/*") (cc . " *") (ce . "*/") )
  lisp-cmnt-alist '( (cs . ";;") (cc . ";;") (ce . ";;") )
  fund-cmnt-alist '( (cs . "##") (cc . "##") (ce . "##") )
@@ -84,7 +84,11 @@
         (makefile-automake-mode    . mk-cmnt-alist)
 	(latex-mode                . tex-cmnt-alist)
         (js-mode                   . js-cmnt-alist)
+        (js2-mode                  . js-cmnt-alist)
+        (js2-jsx-mode              . js-cmnt-alist)
 	(mhtml-mode                . html-cmnt-alist)
+	(html-mode                 . html-cmnt-alist)
+	(web-mode                  . html-cmnt-alist)
 	(css-mode                  . css-cmnt-alist)
         (lisp-mode                 . lisp-cmnt-alist)
         (emacs-lisp-mode           . lisp-cmnt-alist)
@@ -129,13 +133,15 @@
     (setq projname (read-from-minibuffer
 		    (format "Type project name (RETURN to quit) : ")))
 
-    (if (eq major-mode 'mhtml-mode)
+    (if (or (eq major-mode 'html-mode)
+            (eq major-mode 'mhtml-mode))
         (progn
           (insert (std-get 'banner))
           (newline)))
 
     (if (or (eq major-mode 'c-mode)
             (eq major-mode 'css-mode)
+            (eq major-mode 'html-mode)
             (eq major-mode 'mhtml-mode)
             (equal (std-get 'cs) (std-get 'cc)))
         ()
@@ -148,6 +154,7 @@
     (newline)
 
     (if (or (eq major-mode 'c-mode)
+            (eq major-mode 'html-mode)
             (eq major-mode 'mhtml-mode)
             (eq major-mode 'css-mode))
         (progn
