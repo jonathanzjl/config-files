@@ -1,5 +1,8 @@
 2018-12-28  Zhijin Li  <jonathan.zj.lee@gmail.com>
 
+	* .emacs.d/insert-header.el: Rewrite comment header utils to
+	depend on file extension.
+
 	* .emacs: Improve web-mode.
 
 2018-12-27  Zhijin Li  <jonathan.zj.lee@gmail.com>
