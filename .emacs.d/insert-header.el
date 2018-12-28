@@ -33,12 +33,53 @@
 ;; E-mail:   <jonathan.zj.lee@gmail.com>
 ;;
 ;; Started on  Sun Sep  9 21:05:27 2018 Zhijin Li
-;; Last update Thu Dec 27 23:52:39 2018 Zhijin Li
+;; Last update Fri Dec 28 18:59:51 2018 Zhijin Li
 ;; ---------------------------------------------------------------------------
 
 
 (require 'lice)
+(require 'cl-extra)
 
+
+;; Find extension of current buffer.
+(defun match-curr-buffer-ext (ext)
+  "If current buffer matches input extension, return"
+  "the extension. Otherwise return nil."
+  (when (string-match
+         (concat "\\." ext "~??$") buffer-file-name)
+    ext))
+
+
+(defun get-curr-buffer-ext (all-ext)
+  "Get the matched file extension from the list of all"
+  "extensions for current buffer."
+  (cl-some #'match-curr-buffer-ext all-ext))
+
+
+;; All file extensions
+(setq ext-list
+      '(
+        "h"
+        "c"
+        "hh"
+        "hxx"
+        "hpp"
+        "cc"
+        "cxx"
+        "cpp"
+        "sh"
+        "py"
+        "js"
+        "jsx"
+        "html"
+        "css"
+        "el"
+        "emacs"
+        "m"
+        ))
+
+
+;; Header banner.
 (setq header-created-by	"Created by "
       header-login	"E-mail:   "
       header-login-beg	"<"
@@ -52,12 +93,16 @@
       header-line	" ---------------------------------------------------------------------------")
 
 
-(if (setq user-nickname (getenv "USER_NICKNAME"))
-    t
+;; Get user nick name
+(if (setq user-nickname (getenv "USER_NICKNAME")) t
   (setq user-nickname (user-full-name)))
 
+
+;; Set-up update-when-writting.
 (setq write-file-hooks (cons 'update-std-header write-file-hooks))
 
+
+;; Specification of comment chars for diff modes.
 (setq
  c-cmnt-alist    '( (cs . "/*") (cc . " *") (ce . "*/") )
  c++-cmnt-alist  '( (cs . "//") (cc . "//") (ce . "//") )
@@ -70,36 +115,42 @@
  html-cmnt-alist '( (banner . "<!DOCTYPE html>") (cs . "<!--") (cc . "   --") (ce . "-->"))
  css-cmnt-alist  '( (cs . "/*") (cc . " *") (ce . "*/") )
  lisp-cmnt-alist '( (cs . ";;") (cc . ";;") (ce . ";;") )
+ octave-cmnt-alist '( (cs . "%") (cc . "%") (ce . "%") )
  fund-cmnt-alist '( (cs . "##") (cc . "##") (ce . "##") )
  )
 
+
+;; Mode and comment chars mapping.
 (setq major-mode-alist
       '(
-	(c-mode                    . c-cmnt-alist)
-        (c++-mode                  . c++-cmnt-alist)
-	(java-mode             	   . java-cmnt-alist)
-        (python-mode               . py-cmnt-alist)
-        (sh-mode                   . sh-cmnt-alist)
-        (makefile-bsdmakefile-mode . mk-cmnt-alist)
-        (makefile-automake-mode    . mk-cmnt-alist)
-	(latex-mode                . tex-cmnt-alist)
-        (js-mode                   . js-cmnt-alist)
-        (js2-mode                  . js-cmnt-alist)
-        (js2-jsx-mode              . js-cmnt-alist)
-	(mhtml-mode                . html-cmnt-alist)
-	(html-mode                 . html-cmnt-alist)
-	(web-mode                  . html-cmnt-alist)
-	(css-mode                  . css-cmnt-alist)
-        (lisp-mode                 . lisp-cmnt-alist)
-        (emacs-lisp-mode           . lisp-cmnt-alist)
-        (lisp-interaction-mode     . lisp-cmnt-alist)
-        (fundamental-mode          . fund-cmnt-alist)
+        ("h"     . c-cmnt-alist)
+        ("c"     . c-cmnt-alist)
+        ("hh"    . c++-cmnt-alist)
+        ("hxx"   . c++-cmnt-alist)
+        ("hpp"   . c++-cmnt-alist)
+        ("cc"    . c++-cmnt-alist)
+        ("cxx"   . c++-cmnt-alist)
+        ("cpp"   . c++-cmnt-alist)
+        ("java"  . java-cmnt-alist)
+        ("sh"    . sh-cmnt-alist)
+        ("py"    . py-cmnt-alist)
+        ("js"    . js-cmnt-alist)
+        ("jsx"   . js-cmnt-alist)
+        ("html"  . html-cmnt-alist)
+        ("css"   . css-cmnt-alist)
+        ("el"    . lisp-cmnt-alist)
+        ("emacs" . lisp-cmnt-alist)
+        ("m"     . octave-cmnt-alist)
+        (nil     . fund-cmnt-alist)
         ))
 
 
 (defun std-get (a)
+  "Get comment character strings."
   (interactive)
-  (cdr (assoc a (eval (cdr (assoc major-mode major-mode-alist))))))
+  (cdr (assoc a (eval (cdr (assoc
+                            (get-curr-buffer-ext ext-list)
+                            major-mode-alist))))))
 
 
 (defun update-std-header ()
@@ -133,17 +184,17 @@
     (setq projname (read-from-minibuffer
 		    (format "Type project name (RETURN to quit) : ")))
 
-    (if (or (eq major-mode 'html-mode)
-            (eq major-mode 'mhtml-mode))
+    (if (string= (get-curr-buffer-ext ext-list) "html")
         (progn
           (insert (std-get 'banner))
           (newline)))
 
-    (if (or (eq major-mode 'c-mode)
-            (eq major-mode 'css-mode)
-            (eq major-mode 'html-mode)
-            (eq major-mode 'mhtml-mode)
-            (equal (std-get 'cs) (std-get 'cc)))
+    (if (or
+         (string= (get-curr-buffer-ext ext-list) "c")
+         (string= (get-curr-buffer-ext ext-list) "h")
+         (string= (get-curr-buffer-ext ext-list) "html")
+         (string= (get-curr-buffer-ext ext-list) "css")
+         (string= (std-get 'cs) (std-get 'cc)))
         ()
       (progn
         (insert (std-get 'cs))
@@ -153,10 +204,12 @@
     (call-interactively #'lice)
     (newline)
 
-    (if (or (eq major-mode 'c-mode)
-            (eq major-mode 'html-mode)
-            (eq major-mode 'mhtml-mode)
-            (eq major-mode 'css-mode))
+    (if (or
+         (string= (get-curr-buffer-ext ext-list) "c")
+         (string= (get-curr-buffer-ext ext-list) "h")
+         (string= (get-curr-buffer-ext ext-list) "html")
+         (string= (get-curr-buffer-ext ext-list) "css")
+         )
         (progn
           (insert (std-get 'cs))
           (newline))
@@ -264,21 +317,6 @@
 (global-set-key "" 'std-file-header)
 
 ;;;; Generating local keymaps for special modes.
-
-;;; In CPerl mode, C-c C-h is used to do some help.
-;;; so it is C-c C-h h
-(add-hook 'cperl-mode-hook
-	  '(lambda ()
-	     (define-key cperl-mode-map ""
-	       'comment-region)
-	     (define-key cperl-mode-map "h"
-	       'std-file-header)))
-
-;; for perl-mode
-(add-hook 'perl-mode-hook
-	  '(lambda ()
-	     (define-key perl-mode-map ""
-	       'comment-region)))
 
 ;; for all lisp codes
 (add-hook 'lisp-interaction-mode-hook
